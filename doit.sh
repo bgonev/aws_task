@@ -98,11 +98,13 @@ sed -i 's/2g/1g/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
 systemctl start puppetserver
 systemctl enable puppetserver
 
+
 ## Copy files to appropriate destinations
-mkdir -p /home/puppet/files
-/usr/bin/cp -rf ./neo/files/files/* /home/puppet/files
-/usr/bin/cp -rf ./neo/puppet/production/production/* /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
 systemctl restart puppetserver
+
 
 ## Create and configure AWS resources
 #mkdir -p /home/puppet/aws_pem/
