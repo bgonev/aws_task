@@ -181,13 +181,13 @@ $host "sudo  systemctl disable firewalld"
 $host "sudo  systemctl stop firewalld"
 $host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
 $host "sudo  yum -y install puppet-agent"
-$host "/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
+$host "sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
 done
 
 
 ## Sign all cerificates on Puppet Master
-/opt/puppetlabs/bin/puppet cert sign --all
+sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 
 ## Pull configs MUST IN THIS order
