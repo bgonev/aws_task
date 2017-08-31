@@ -15,7 +15,7 @@ nfsserver2_pem=nfsserver2.pem
 sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
-
+cd ~/tmp/from_git/
 
 
 ## Remote execution aliases
