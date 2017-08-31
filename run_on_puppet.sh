@@ -132,9 +132,9 @@ sudo systemctl enable puppetserver
 
 
 ## Copy files to appropriate destinations
-/usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
-/usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
-/usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
+sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
+sudo /usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
+sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
 sudo systemctl restart puppetserver
 
 ## Temporary enable root trough ssh
