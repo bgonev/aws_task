@@ -124,7 +124,9 @@ sudo systemctl stop firewalld
 ## Install Puppet
 sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 sudo yum -y install puppetserver
-sudo sed -i 's/2g/1g/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
+sudo sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
+sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
+
 sudo systemctl start puppetserver
 sudo systemctl enable puppetserver
 
