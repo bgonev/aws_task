@@ -122,8 +122,8 @@ sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
 ## Install Puppet
-rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
-udo yum -y install puppetserver
+sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+sudo yum -y install puppetserver
 sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
 sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
 
@@ -179,7 +179,7 @@ $host "sudo  setenforce 0"
 $host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
 $host "sudo  systemctl disable firewalld"
 $host "sudo  systemctl stop firewalld"
-$host "rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
+$host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
 $host "sudo  yum -y install puppet-agent"
 $host "/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
