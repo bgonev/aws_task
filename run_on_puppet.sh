@@ -21,27 +21,27 @@ cd ~/tmp/from_git/
 ## Remote execution aliases
 
 exe_w1 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$web1_pem centos@$web1 $1
+ssh -i ../to_aws/keys/$web1_pem -o StrictHostKeyChecking=no centos@$web1 $1
 }
 
 exe_w2 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$web2_pem centos@$web2 $1
+ssh -i ../to_aws/keys/$web2_pem -o StrictHostKeyChecking=no centos@$web2 $1
 }
 
 exe_n1 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$nfsserver1_pem centos@$nfsserver $1
+ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no centos@$nfsserver $1
 }
 
 exe_n2 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$nfsserver2_pem centos@$nfsserver $1
+ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver $1
 }
 
 exe_s1 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$sql1_pem centos@$sql1 $1
+ssh -i ../to_aws/keys/$sql1_pem -o StrictHostKeyChecking=no centos@$sql1 $1
 }
 
 exe_s2 () {
-ssh -i -o StrictHostKeyChecking=no ../to_aws/keys/$sql2_pem centos@$sql2 $1
+ssh -i ../to_aws/keys/$sql2_pem -o StrictHostKeyChecking=no centos@$sql2 $1
 }
 
 
@@ -107,7 +107,7 @@ cpr_hosts=("cpr_w1" "cpr_w2" "cpr_n1" "cpr_n2" "cpr_s1" "cpr_s2")
 
 
 ## Install ntp
-yum -y install ntp
+sudo yum -y install ntp
 ntpdate pool.ntp.org
 sudo systemctl restart ntpd
 sudo systemctl enable ntpd
