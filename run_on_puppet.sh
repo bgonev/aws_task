@@ -3,7 +3,7 @@
 web1='web1.domain.com'
 web2='web2.domain.com'
 nfsserver1='nfsserver1.domain.com'
-nfsserver1='nfsserver1.domain.com'
+nfsserver2='nfsserver2.domain.com'
 sql1='sql1.domain.com'
 sql2='sql2.domain.com'
 
@@ -29,11 +29,11 @@ ssh -i ../to_aws/keys/$web2_pem -o StrictHostKeyChecking=no centos@$web2 $1
 }
 
 exe_n1 () {
-ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no centos@$nfsserver $1
+ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no centos@$nfsserver1 $1
 }
 
 exe_n2 () {
-ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver $1
+ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver1 $1
 }
 
 exe_s1 () {
@@ -108,7 +108,7 @@ cpr_hosts=("cpr_w1" "cpr_w2" "cpr_n1" "cpr_n2" "cpr_s1" "cpr_s2")
 
 ## Install ntp
 sudo yum -y install ntp
-ntpdate pool.ntp.org
+sudo /usr/sbin/ntpdate pool.ntp.org
 sudo systemctl restart ntpd
 sudo systemctl enable ntpd
 
