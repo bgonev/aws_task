@@ -122,45 +122,20 @@ sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
 ## Install Puppet
-sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
-sudo yum -y install puppetserver
-sudo sed -i 's/1g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
-sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
+rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+udo yum -y install puppetserver
+sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
+sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
 
 sudo systemctl start puppetserver
 sudo systemctl enable puppetserver
 
 
 ## Copy files to appropriate destinations
-sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
-sudo /usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
-sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
+/usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
 sudo systemctl restart puppetserver
-
-
-
-## configure hostnames to all aws machines
-exe_w1 "sudo -i hostnamectl set-hostname $web1"
-exe_w2 "sudo -i hostnamectl set-hostname $web2"
-exe_n1 "sudo -i hostnamectl set-hostname $nfsserver1"
-exe_n2 "sudo -i hostnamectl set-hostname $nfsserver2"
-exe_s1 "sudo -i hostnamectl set-hostname $sql1"
-exe_s2 "sudo -i hostnamectl set-hostname $sql2"
-
-
-## Common commands for all hosts - Disable FW and SELinux
-
-for host in "${exe_hosts[@]}"
-do
-$host "sudo  setenforce 0"
-$host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
-$host "sudo  systemctl disable firewalld"
-$host "sudo  systemctl stop firewalld"
-$host "sudo  rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
-$host "sudo  yum -y install puppet-agent"
-$host "sudo  /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
-
-done
 
 ## Temporary enable root trough ssh
 
@@ -181,10 +156,35 @@ done
 ## Disable root trough ssh
 
 for host in "${exe_hosts[@]}"
-do 
+do
 $host "sudo -i cp -rf /root/.ssh/authorized_keys_orig /root/.ssh/authorized_keys"
 
 done
+
+
+## configure hostnames to all aws machines
+exe_w1 "sudo -i hostnamectl set-hostname $web1"
+exe_w2 "sudo -i hostnamectl set-hostname $web2"
+exe_n1 "sudo -i hostnamectl set-hostname $nfsserver1"
+exe_n2 "sudo -i hostnamectl set-hostname $nfsserver2"
+exe_s1 "sudo -i hostnamectl set-hostname $sql1"
+exe_s2 "sudo -i hostnamectl set-hostname $sql2"
+
+
+## Common commands for all hosts - Disable FW and SELinux
+
+for host in "${exe_hosts[@]}"
+do
+$host "sudo  setenforce 0"
+$host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
+$host "sudo  systemctl disable firewalld"
+$host "sudo  systemctl stop firewalld"
+$host "rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
+$host "sudo  yum -y install puppet-agent"
+$host "/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
+
+done
+
 
 ## Sign all cerificates on Puppet Master
 /opt/puppetlabs/bin/puppet cert sign --all
