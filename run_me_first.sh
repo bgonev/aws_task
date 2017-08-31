@@ -65,6 +65,7 @@ echo "---------SG Objects--------" >> /tmp/aws_objects.log
 for sg in "${sg_list[@]}"
 do
 tag $sg
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 22 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 1-65535 --cidr 192.168.0.0/16
 aws ec2 authorize-security-group-ingress --group-id $sg --protocol udp --port 1-65535 --cidr 192.168.0.0/16
 aws ec2 authorize-security-group-ingress --group-id $sg --ip-permissions '[{"IpProtocol": "icmp", "FromPort": 8, "ToPort": 0, "IpRanges": [{"CidrIp": "192.168.0.0/16"}]}]'
