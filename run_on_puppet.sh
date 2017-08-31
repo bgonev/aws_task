@@ -16,6 +16,7 @@ sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
 cd ~/tmp/from_git/
+chmod 400 ../to_aws/keys/*
 
 
 ## Remote execution aliases
