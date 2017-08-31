@@ -124,7 +124,7 @@ sudo systemctl stop firewalld
 ## Install Puppet
 sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 sudo yum -y install puppetserver
-sudo sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
+sudo sed -i 's/1g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
 sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
 
 sudo systemctl start puppetserver
@@ -152,13 +152,13 @@ exe_s2 "sudo -i hostnamectl set-hostname $sql2"
 
 for host in "${exe_hosts[@]}"
 do
-$host "sudo -i setenforce 0"
-$host "sudo -i sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
-$host "sudo -i systemctl disable firewalld"
-$host "sudo -i systemctl stop firewalld"
-$host "sudo -i rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
-$host "sudo -i yum -y install puppet-agent"
-$host "sudo -i /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
+$host "sudo  setenforce 0"
+$host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
+$host "sudo  systemctl disable firewalld"
+$host "sudo  systemctl stop firewalld"
+$host "sudo  rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
+$host "sudo  yum -y install puppet-agent"
+$host "sudo  /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
 done
 
