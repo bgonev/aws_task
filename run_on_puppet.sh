@@ -164,6 +164,7 @@ done
 
 
 ## configure hostnames to all aws machines
+echo "Setting hostnamemes on servers..."
 exe_w1 "sudo -i hostnamectl set-hostname $web1"
 exe_w2 "sudo -i hostnamectl set-hostname $web2"
 exe_n1 "sudo -i hostnamectl set-hostname $nfsserver1"
@@ -176,6 +177,7 @@ exe_s2 "sudo -i hostnamectl set-hostname $sql2"
 
 for host in "${exe_hosts[@]}"
 do
+echo "Start of $host.... - DEBUG"
 $host "sudo  setenforce 0"
 $host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
 $host "sudo  systemctl disable firewalld"
