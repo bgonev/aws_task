@@ -165,7 +165,7 @@ done
 for host in "${exe_hosts[@]}"
 do
 $host "sudo -i cp -rf /root/.ssh/authorized_keys /root/.ssh/authorized_keys_orig"
-$host "sudo -i "sudo -i cp -rf ~/.ssh/authorized_keys /root/.ssh/authorized_keys"
+$host "sudo -i cp -rf ~/.ssh/authorized_keys /root/.ssh/authorized_keys"
 
 done
 
@@ -175,6 +175,16 @@ for host in "${cpr_hosts[@]}"
 do
 $host "/etc/hosts" "/etc/hosts"
 done
+
+
+## Disable root trough ssh
+
+for host in "${exe_hosts[@]}"
+do
+$host "sudo -i cp -rf /root/.ssh/authorized_keys_orig /root/.ssh/authorized_keys"
+
+done
+
 
 ## Sign all cerificates on Puppet Master
 /opt/puppetlabs/bin/puppet cert sign --all
