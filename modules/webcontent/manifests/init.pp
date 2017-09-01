@@ -52,7 +52,7 @@ file { 'webshare':
   }
 
 mount { "/webshare":
-        device  => "nfsserver:/webshare",
+        device  => "nfsserver1:/webshare",
         fstype  => "nfs",
 	ensure  => "mounted",
 	options => "rw,nolock",

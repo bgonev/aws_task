@@ -15,6 +15,14 @@ nfsserver2_pem=nfsserver2.pem
 sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
+
+echo " *****************************************************************************************"
+echo " ***                                                                                  ****"
+echo " ***                OK - We are on AWS - Let's deploy and configure the services !    ****"
+echo " ***                                                                                  ****"
+echo " *****************************************************************************************"
+echo ""
+
 cd ~/tmp/from_git/
 chmod 400 ../to_aws/keys/*
 
@@ -129,8 +137,6 @@ sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysco
 
 sudo systemctl start puppetserver
 sudo systemctl enable puppetserver
-echo "Sega sum vo"
-pwd
 
 ## Copy files to appropriate destinations
 sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
@@ -149,15 +155,14 @@ $host "sudo -i cp -rf ~/.ssh/authorized_keys /root/.ssh/authorized_keys"
 
 done
 
+
 ## Common copy for all hosts - /etc/hosts
-echo "Sega sum vo"
-pwd
+
+echo "Distribute /etc/hosts to all hosts..."
 for host in "${cpr_hosts[@]}"
 do
 $host "/etc/hosts" "/etc/hosts"
 done
-echo "Sega sum vo"
-pwd
 ## Disable root trough ssh
 
 for host in "${exe_hosts[@]}"
@@ -165,8 +170,8 @@ do
 $host "sudo -i cp -rf /root/.ssh/authorized_keys_orig /root/.ssh/authorized_keys"
 
 done
-echo "Sega sum vo"
-pwd
+
+
 ## configure hostnames to all aws machines
 echo "Setting hostnamemes on servers..."
 exe_w1 "sudo -i hostnamectl set-hostname $web1"
@@ -181,7 +186,6 @@ exe_s2 "sudo -i hostnamectl set-hostname $sql2"
 
 for host in "${exe_hosts[@]}"
 do
-echo "Start of $host.... - DEBUG"
 $host "sudo  setenforce 0"
 $host "sudo  sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config"
 $host "sudo  systemctl disable firewalld"
@@ -196,13 +200,17 @@ done
 
 
 ## Sign all cerificates on Puppet Master
+echo "Here we are waiting 5 minutes all puppet services to be started so certificates can be signed..."
 sleep 300
 sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 
 ## Pull configs MUST IN THIS order
-echo " *** Please Stand-By - Configuration is applying on each node - 10 minuter per node *** "
-echo " *** GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-) ***"
+echo " *****************************************************************************************"
+echo " *** Please Stand-By - Configuration is applying on each node - cca 5 minuter per node ***"
+echo " *** GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-)                ****"
+echo " *****************************************************************************************"
+echo ""
 exe_n1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
 exe_n2 "sudo /opt/puppetlabs/bin/puppet agent --test"
@@ -220,5 +228,4 @@ exe_w1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
 exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
-
-
+echo "*****End.******"
