@@ -8,6 +8,9 @@
 #
 #aws configure
 
+echo "***********************************************************************"
+
+
 mkdir -p ./to_aws/files
 mkdir -p ./to_aws/keys
 pemlocation="./to_aws/keys"
