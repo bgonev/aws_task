@@ -76,6 +76,16 @@ file { 'insert.sh':
     source => 'puppet:///modules/webcontent/insert.sh',
   }
 
+file { '/etc/nginx/sites-enabled/www.domain.com.conf':
+  ensure => link,
+  target => '/etc/nginx/sites-available/www.domain.com.conf',
+}
+
+file { '/etc/nginx/sites-enabled/ssl.conf':
+  ensure => link,
+  target => '/etc/nginx/sites-available/ssl.conf',
+}
+
 exec {'restart':
 command => '/sbin/service nginx restart'
 }
