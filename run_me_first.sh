@@ -35,7 +35,7 @@ aws ec2 associate-route-table  --subnet-id $sub2_pub_id --route-table-id $rt_id 
 aws ec2 modify-subnet-attribute --subnet-id $sub1_pub_id --map-public-ip-on-launch
 aws ec2 modify-subnet-attribute --subnet-id $sub2_pub_id --map-public-ip-on-launch
 eip_id=`aws ec2 allocate-address --domain vpc --query AllocationId --output text`
-natgw_id=`aws ec2 create-nat-gateway --subnet-id $sub1_pub_id --allocation-id eipalloc-55b0dd7b --query NatGateway.NatGatewayId --output text`
+natgw_id=`aws ec2 create-nat-gateway --subnet-id $sub1_pub_id --allocation-id $eip_id --query NatGateway.NatGatewayId --output text`
 ## We must sleep here as on tests Pending message was > 60 < seconds
 sleep 120
 main_rt_id=`aws ec2 describe-route-tables --filters "Name=vpc-id,Values=$vpc_id" --query 'RouteTables[?Associations[0].Main == \`true\`]' --output text | head -1 | awk '{print $1}'`
