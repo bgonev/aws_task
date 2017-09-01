@@ -15,6 +15,9 @@ nfsserver2_pem=nfsserver2.pem
 sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
+## Addresses of LB
+ip=`cat ./to_aws/files/lb.ip`
+address=`cat./to_aws/files/lb.address`
 
 echo " *****************************************************************************************"
 echo " ***                                                                                  ****"
@@ -249,3 +252,6 @@ sleep 120
 exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
 echo "*****End.******"
+
+echo "Add to your hosts file following record: $ip www.domain.com"
+echo "Then point your browser to http://www.domain.com to test the application hosted on this platform"
