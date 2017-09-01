@@ -136,8 +136,9 @@ pwd
 sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
 sudo /usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
 sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
+sudo systemctl stop puppetserver
 sudo rm -rf /etc/puppetlabs/puppet/ssl
-sudo systemctl restart puppetserver
+sudo systemctl start puppetserver
 
 ## Temporary enable root trough ssh
 
@@ -195,7 +196,7 @@ done
 
 
 ## Sign all cerificates on Puppet Master
-sleep 10
+sleep 120
 sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 
