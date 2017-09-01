@@ -143,6 +143,7 @@ sudo /usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
 sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
 sudo systemctl stop puppetserver
 sudo rm -rf /etc/puppetlabs/puppet/ssl
+sudo mkdir /etc/puppetlabs/puppet/ssl
 sudo systemctl start puppetserver
 
 ## It is t2.micro, too lesss RAM so we must wait for puppetserver service to be started
