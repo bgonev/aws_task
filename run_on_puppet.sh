@@ -199,19 +199,21 @@ sudo /opt/puppetlabs/bin/puppet cert sign --all
 ## Pull configs MUST IN THIS order
 echo " *** Please Stand-By - Configuration is applying on each node - 10 minuter per node *** "
 echo " *** GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-) ***"
-exe_n1 "/opt/puppetlabs/bin/puppet agent --test"
+exe_n1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 300
-exe_s1 "/opt/puppetlabs/bin/puppet agent --test"
+exe_n2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 300
-exe_s2 "/opt/puppetlabs/bin/puppet agent --test"
+exe_s1 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 300
+exe_s2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 300
 ### execute replication configuration
 exe_s1 "/tmp/master.sh"
 sleep 30
 exe_s2 "/tmp/slave.sh"
-exe_w1 "/opt/puppetlabs/bin/puppet agent --test"
+exe_w1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 300
-exe_w2 "/opt/puppetlabs/bin/puppet agent --test"
+exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
 
 
