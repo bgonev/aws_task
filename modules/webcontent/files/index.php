@@ -1,4 +1,12 @@
-<?php echo '<p>The task is succesfully finished. Give Boro the  Job offer :-)</p>'; ?>
+
+
+<?php echo '<p>The task is succesfully completed. Give Boro the  Job offer :-) Best regards from Me and my helper </p>'; ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<img src="me_and_max.jpg" width="640" height="480" alt="Image is missing.. It's Me and Max" />
+
+</html>
 
 <?php echo '<p>The line that follows is output from DB query</p>'; ?>
 
