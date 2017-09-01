@@ -221,8 +221,7 @@ done
 
 
 ## Sign all cerificates on Puppet Master
-echo "Here we are waiting 5 minutes all puppet services to be started so certificates can be signed..."
-sleep 300
+
 sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 

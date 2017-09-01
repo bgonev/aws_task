@@ -9,7 +9,10 @@
 #aws configure
 
 echo "***********************************************************************"
-
+echo "*                                                                     *"
+echo "*                     OK - Let's Start !                              *"
+echo "*                                         created by: bgonev          *"
+echo "***********************************************************************"
 
 mkdir -p ./to_aws/files
 mkdir -p ./to_aws/keys
@@ -158,6 +161,7 @@ echo "Nfs1 private IP  : " $nfs1_pvt_ip >> /tmp/aws_objects.log
 echo "Nfs2 private IP  : " $nfs2_pvt_ip >> /tmp/aws_objects.log
 echo "Sql1 private IP  : " $sql1_pvt_ip >> /tmp/aws_objects.log
 echo "Sql2 private IP  : " $sql2_pvt_ip >> /tmp/aws_objects.log
+
 
 ## create hosts file for environment
 
