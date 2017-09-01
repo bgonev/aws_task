@@ -150,6 +150,8 @@ sudo mkdir /etc/puppetlabs/puppet/ssl/certificate_requests
 sudo mkdir /etc/puppetlabs/puppet/ssl/private_keys
 sudo mkdir /etc/puppetlabs/puppet/ssl/private
 sudo chmod -R 0771 /etc/puppetlabs/puppet/ssl
+sudo chmod -R 0750 /etc/puppetlabs/puppet/ssl/private_keys
+sudo chmod -R 0750 /etc/puppetlabs/puppet/ssl/private
 sudo systemctl start puppetserver
 
 ## It is t2.micro, too lesss RAM so we must wait for puppetserver service to be started
