@@ -144,6 +144,7 @@ sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/produc
 sudo systemctl stop puppetserver
 sudo rm -rf /etc/puppetlabs/puppet/ssl
 sudo mkdir /etc/puppetlabs/puppet/ssl
+sudo chmod 0771 /etc/puppetlabs/puppet/ssl
 sudo systemctl start puppetserver
 
 ## It is t2.micro, too lesss RAM so we must wait for puppetserver service to be started
@@ -205,6 +206,7 @@ $host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noar
 $host "sudo  yum -y install puppet-agent"
 $host "sudo rm -rf /etc/puppetlabs/puppet/ssl"
 $host "sudo mkdir /etc/puppetlabs/puppet/ssl"
+$host "sudo chmod 0771 /etc/puppetlabs/puppet/ssl"
 $host "sudo  systemctl restart puppet"
 $host "sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
