@@ -19,7 +19,13 @@ include webcontent
 include mysqlclient
 }
 
-node nfsserver.domain.com {
+node nfsserver1.domain.com {
+include ntp
+include nfsserver
+}
+
+
+node nfsserver2.domain.com {
 include ntp
 include nfsserver
 }
