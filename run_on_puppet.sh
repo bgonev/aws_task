@@ -203,6 +203,7 @@ $host "sudo  systemctl stop firewalld"
 $host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
 $host "sudo  yum -y install puppet-agent"
 $host "sudo rm -rf /etc/puppetlabs/puppet/ssl"
+$host "sudo mkdir /etc/puppetlabs/puppet/ssl"
 $host "sudo  systemctl restart puppet"
 $host "sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
