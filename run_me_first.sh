@@ -1,12 +1,12 @@
 #!/bin/bash
 ### install aws cli
-echo "Indstalling AWS CLI..."
-curl -O https://bootstrap.pypa.io/get-pip.py
-python get-pip.py --user
-~/.local/bin/pip install awscli --upgrade --user
-sudo /bin/cp -rf ~/.local/bin/* /usr/bin
-
-aws configure
+#echo "Indstalling AWS CLI..."
+#curl -O https://bootstrap.pypa.io/get-pip.py
+#python get-pip.py --user
+#~/.local/bin/pip install awscli --upgrade --user
+#sudo /bin/cp -rf ~/.local/bin/* /usr/bin
+#
+#aws configure
 
 mkdir -p ./to_aws/files
 mkdir -p ./to_aws/keys
@@ -167,7 +167,7 @@ echo $sql1_pvt_ip " sql1 sql1.domain.com" >> ./to_aws/files/hosts
 echo $sql2_pvt_ip " sql2 sql2.domain.com" >> ./to_aws/files/hosts
 
 ## Start working on Puppet server
-
+chmod -R 400 ./to_aws/keys
 exe_pup() {
 ssh -i ./to_aws/keys/puppet.pem -o StrictHostKeyChecking=no centos@$puppet_pub_ip $1
 }
