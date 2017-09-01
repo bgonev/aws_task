@@ -63,6 +63,7 @@ puppet_sg=`aws ec2 create-security-group --group-name puppet-sec-group --descrip
 web_sg=`aws ec2 create-security-group --group-name web-sec-group --description "Web servers security group" --vpc-id $vpc_id --query 'GroupId' --output text`
 nfs_sg=`aws ec2 create-security-group --group-name nfs-sec-group --description "NFS serverst security group " --vpc-id $vpc_id --query 'GroupId' --output text`
 sql_sg=`aws ec2 create-security-group --group-name sql-sec-group --description "SQL serverst security group " --vpc-id $vpc_id --query 'GroupId' --output text`
+lb_sg=`aws ec2 create-security-group --group-name sql-sec-group --description "LB security group " --vpc-id $vpc_id --query 'GroupId' --output text`
 
 ## Tag SG and enable unrestricted local communication on 
 
@@ -81,7 +82,8 @@ done
 ## Additional configuration of SG
 aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 80 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 443 --cidr 0.0.0.0/0
-
+aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 443 --cidr 0.0.0.0/0
 
 ## Create PEM key files
 
@@ -120,6 +122,17 @@ tag $t2
 echo $t2 >> /tmp/aws_objects.log
 done
 
+
+## Create Application load Balancer
+lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_id $sub2_pub_id --security-groups $lb_sg --query 'LoadBalancers[0].LoadBalancerArn' --output text`
+tg80_arn=`aws elbv2 create-target-group --name web80srvrsc8 --protocol HTTP --port 80 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
+tg443_arn=`aws elbv2 create-target-group --name web443srvrsc8 --protocol HTTP --port 443 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
+aws elbv2 register-targets --target-group-arn $tg80_arn  --targets Id=$web1_id Id=$web2_id
+aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id Id=$web2_id
+aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn
+aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTPS --port 443  --certificates CertificateArn=arn:aws:iam::272462672480:server-certificate/aws-demo --default-actions Type=forward,TargetGroupArn=$tg443_arn
+lb_address=`aws elbv2 describe-load-balancers --names lbCandidate8 --query LoadBalancers[0].DNSName --output text`
+
 ## Find Public and Private addresses for each instance 
 
 ## Public IPs
@@ -135,7 +148,7 @@ nfs1_pvt_ip=`aws ec2 describe-instances --instance-ids $nfs1_id --query 'Reserva
 nfs2_pvt_ip=`aws ec2 describe-instances --instance-ids $nfs2_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
 sql1_pvt_ip=`aws ec2 describe-instances --instance-ids $sql1_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
 sql2_pvt_ip=`aws ec2 describe-instances --instance-ids $sql2_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
-
+lb_ip=`dig +short $lb_address | head -1`
 echo "Following are IP addresses: "
 echo "Puppet public IP : " $puppet_pub_ip
 echo "Puppet private IP: " $puppet_pvt_ip
@@ -147,6 +160,8 @@ echo "Nfs1 private IP  : " $nfs1_pvt_ip
 echo "Nfs2 private IP  : " $nfs2_pvt_ip
 echo "Sql1 private IP  : " $sql1_pvt_ip
 echo "Sql2 private IP  : " $sql2_pvt_ip
+echo "LB Pubblic Addr  : " $lb_ip
+echo "LB Address       : " $lb_address
 
 ## Following goes to the log file 
 
@@ -161,7 +176,8 @@ echo "Nfs1 private IP  : " $nfs1_pvt_ip >> /tmp/aws_objects.log
 echo "Nfs2 private IP  : " $nfs2_pvt_ip >> /tmp/aws_objects.log
 echo "Sql1 private IP  : " $sql1_pvt_ip >> /tmp/aws_objects.log
 echo "Sql2 private IP  : " $sql2_pvt_ip >> /tmp/aws_objects.log
-
+echo "LB Pubblic Addr  : " $lb_ip >> /tmp/aws_objects.log
+echo "LB Pubblic Addr  : " $lb_address >> /tmp/aws_objects.log
 
 ## create hosts file for environment
 
@@ -172,6 +188,8 @@ echo $nfs1_pvt_ip " nfsserver1 nfsserver1.domain.com" >> ./to_aws/files/hosts
 echo $nfs2_pvt_ip " nfsserver2 nfsserver2.domain.com" >> ./to_aws/files/hosts
 echo $sql1_pvt_ip " sql1 sql1.domain.com" >> ./to_aws/files/hosts
 echo $sql2_pvt_ip " sql2 sql2.domain.com" >> ./to_aws/files/hosts
+echo "LB Pubblic Addr  : " $lb_ip >> ./to_aws/files/lb.ip
+echo "LB Addr  : " $lb_address >> ./to_aws/files/lb.address
 
 ## Start working on Puppet server
 chmod -R 400 ./to_aws/keys
