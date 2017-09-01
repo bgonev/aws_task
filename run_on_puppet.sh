@@ -17,7 +17,6 @@ sql2_pem=sql2.pem
 
 cd ~/tmp/from_git/
 chmod 400 ../to_aws/keys/*
-rm -rf /etc/puppetlabs/puppet/ssl
 
 ## Remote execution aliases
 
@@ -137,6 +136,7 @@ pwd
 sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
 sudo /usr/bin/cp -rf ./modules /etc/puppetlabs/code/environments/production/
 sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/production/
+sudo rm -rf /etc/puppetlabs/puppet/ssl
 sudo systemctl restart puppetserver
 
 ## Temporary enable root trough ssh
@@ -195,6 +195,7 @@ done
 
 
 ## Sign all cerificates on Puppet Master
+sleep 10
 sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 
@@ -202,14 +203,20 @@ sudo /opt/puppetlabs/bin/puppet cert sign --all
 echo " *** Please Stand-By - Configuration is applying on each node - 10 minuter per node *** "
 echo " *** GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-) ***"
 exe_n1 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 120
 exe_n2 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 120
 exe_s1 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 120
 exe_s2 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 120
 ### execute replication configuration
 exe_s1 "/tmp/master.sh"
 sleep 30
 exe_s2 "/tmp/slave.sh"
+sleep 120
 exe_w1 "sudo /opt/puppetlabs/bin/puppet agent --test"
+sleep 120
 exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
 
