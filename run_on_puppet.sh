@@ -130,7 +130,8 @@ sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysco
 
 sudo systemctl start puppetserver
 sudo systemctl enable puppetserver
-
+echo "Sega sum vo"
+pwd
 
 ## Copy files to appropriate destinations
 sudo /usr/bin/cp -rf ./manifests /etc/puppetlabs/code/environments/production/
@@ -148,12 +149,14 @@ $host "sudo -i cp -rf ~/.ssh/authorized_keys /root/.ssh/authorized_keys"
 done
 
 ## Common copy for all hosts - /etc/hosts
-
+echo "Sega sum vo"
+pwd
 for host in "${cpr_hosts[@]}"
 do
 $host "/etc/hosts" "/etc/hosts"
 done
-
+echo "Sega sum vo"
+pwd
 ## Disable root trough ssh
 
 for host in "${exe_hosts[@]}"
@@ -161,8 +164,8 @@ do
 $host "sudo -i cp -rf /root/.ssh/authorized_keys_orig /root/.ssh/authorized_keys"
 
 done
-
-
+echo "Sega sum vo"
+pwd
 ## configure hostnames to all aws machines
 echo "Setting hostnamemes on servers..."
 exe_w1 "sudo -i hostnamectl set-hostname $web1"
