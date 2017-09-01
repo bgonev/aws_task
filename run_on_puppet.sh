@@ -135,7 +135,6 @@ sudo yum -y install puppetserver
 sudo sed -i 's/2g/512m/g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver
 sudo sed -i 's/-XX\:MaxPermSize\=256m//g' /etc/sysconfig/puppetserver /etc/sysconfig/puppetserver 
 
-sudo systemctl start puppetserver
 sudo systemctl enable puppetserver
 
 ## Copy files to appropriate destinations
@@ -145,6 +144,17 @@ sudo /usr/bin/cp -rf ./environment.conf /etc/puppetlabs/code/environments/produc
 sudo systemctl stop puppetserver
 sudo rm -rf /etc/puppetlabs/puppet/ssl
 sudo systemctl start puppetserver
+
+## It is t2.micro, too lesss RAM so we must wait for puppetserver service to be started
+
+while [ "$status" != "active" ]
+do
+echo "Waiting for puppet server to be ACTIVE"
+status=`sudo systemctl status puppetserver | grep Active: | awk '{print $2}'`
+sleep 5
+done
+echo "OK - We got status: Active - let's continue.."
+
 
 ## Temporary enable root trough ssh
 
