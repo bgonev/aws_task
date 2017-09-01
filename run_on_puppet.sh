@@ -17,7 +17,7 @@ sql2_pem=sql2.pem
 
 cd ~/tmp/from_git/
 chmod 400 ../to_aws/keys/*
-rm -rf /etc/puppetlabs/puppet/ssl/*
+rm -rf /etc/puppetlabs/puppet/ssl
 
 ## Remote execution aliases
 
@@ -187,7 +187,7 @@ $host "sudo  systemctl disable firewalld"
 $host "sudo  systemctl stop firewalld"
 $host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
 $host "sudo  yum -y install puppet-agent"
-$host "sudo rm -rf /etc/puppetlabs/puppet/ssl/*"
+$host "sudo rm -rf /etc/puppetlabs/puppet/ssl"
 $host "sudo  systemctl restart puppet"
 $host "sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
