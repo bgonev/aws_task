@@ -34,7 +34,7 @@ ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no centos@$nfsser
 }
 
 exe_n2 () {
-ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver1 $1
+ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver2 $1
 }
 
 exe_s1 () {
