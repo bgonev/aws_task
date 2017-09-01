@@ -196,7 +196,7 @@ done
 
 
 ## Sign all cerificates on Puppet Master
-sleep 120
+sleep 300
 sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 
