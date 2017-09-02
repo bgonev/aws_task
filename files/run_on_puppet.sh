@@ -188,11 +188,17 @@ done
 
 ## configure hostnames to all aws machines
 echo "Setting hostnames on servers..."
+exer_w1 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_w1 "hostnamectl set-hostname $web1"
+exer_w2 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_w2 "hostnamectl set-hostname $web2"
+exer_n1 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_n1 "hostnamectl set-hostname $nfsserver1"
+exer_n2 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_n2 "hostnamectl set-hostname $nfsserver2"
+exer_s1 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_s1 "hostnamectl set-hostname $sql1"
+exer_s2 "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg"
 exer_s2 "hostnamectl set-hostname $sql2"
 
 ## Disable root trough ssh
