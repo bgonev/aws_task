@@ -35,52 +35,65 @@ chmod 400 ../to_aws/keys/*
 exe_w1 () {
 ssh -i ../to_aws/keys/$web1_pem -o StrictHostKeyChecking=no centos@$web1 $1
 }
-
 exe_w2 () {
 ssh -i ../to_aws/keys/$web2_pem -o StrictHostKeyChecking=no centos@$web2 $1
 }
-
 exe_n1 () {
 ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no centos@$nfsserver1 $1
 }
-
 exe_n2 () {
 ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no centos@$nfsserver2 $1
 }
-
 exe_s1 () {
 ssh -i ../to_aws/keys/$sql1_pem -o StrictHostKeyChecking=no centos@$sql1 $1
 }
-
 exe_s2 () {
 ssh -i ../to_aws/keys/$sql2_pem -o StrictHostKeyChecking=no centos@$sql2 $1
 }
 
 
-exe_hosts=("exe_w1" "exe_w2" "exe_n1" "exe_n2" "exe_s1" "exe_s2")
+## Remote execution aliases as root
+
+exer_w1 () {
+ssh -i ../to_aws/keys/$web1_pem -o StrictHostKeyChecking=no root@$web1 $1
+}
+exer_w2 () {
+ssh -i ../to_aws/keys/$web2_pem -o StrictHostKeyChecking=no root@$web2 $1
+}
+exer_n1 () {
+ssh -i ../to_aws/keys/$nfsserver1_pem -o StrictHostKeyChecking=no root@$nfsserver1 $1
+}
+exer_n2 () {
+ssh -i ../to_aws/keys/$nfsserver2_pem -o StrictHostKeyChecking=no root@$nfsserver2 $1
+}
+exer_s1 () {
+ssh -i ../to_aws/keys/$sql1_pem -o StrictHostKeyChecking=no root@$sql1 $1
+}
+exer_s2 () {
+ssh -i ../to_aws/keys/$sql2_pem -o StrictHostKeyChecking=no root@$sql2 $1
+}
+
+
+
+
+exer_hosts=("exer_w1" "exer_w2" "exer_n1" "exer_n2" "exer_s1" "exer_s2")
 
 ## Remote copy aliases : Usage example cp_w1 /etc/hosts /etc/hosts
 
 cp_w1 () {
 scp -i ../to_aws/keys/$web1_pem $1 centos@$web1:$2
 }
-
 cp_w2 () {
 scp -i ../to_aws/keys/$web2_pem $1 centos@$web2:$2
 }
-
-cp_n1 () {
 scp -i ../to_aws/keys/$nfsserver1_pem $1 centos@$nfsserver1:$2
 }
-
 cp_n2 () {
 scp -i ../to_aws/keys/$nfsserver2_pem $1 centos@$nfsserver2:$2
 }
-
 cp_s1 () {
 scp -i ../to_aws/keys/$sql1_pem $1 centos@$sql1:$2
 }
-
 cp_s2 () {
 scp -i ../to_aws/keys/$sql2_pem $1 centos@$sql2:$2
 }
@@ -94,23 +107,18 @@ cp_hosts=("cp_w1" "cp_w2" "cp_n1" "cp_n2" "cp_s1" "cp_s2")
 cpr_w1 () {
 scp -i ../to_aws/keys/$web1_pem $1 root@$web1:$2
 }
-
 cpr_w2 () {
 scp -i ../to_aws/keys/$web2_pem $1 root@$web2:$2
 }
-
 cpr_n1 () {
 scp -i ../to_aws/keys/$nfsserver1_pem $1 root@$nfsserver1:$2
 }
-
 cpr_n2 () {
 scp -i ../to_aws/keys/$nfsserver2_pem $1 root@$nfsserver2:$2
 }
-
 cpr_s1 () {
 scp -i ../to_aws/keys/$sql1_pem $1 root@$sql1:$2
 }
-
 cpr_s2 () {
 scp -i ../to_aws/keys/$sql2_pem $1 root@$sql2:$2
 }
@@ -188,6 +196,17 @@ for host in "${cpr_hosts[@]}"
 do
 $host "/etc/hosts" "/etc/hosts"
 done
+
+
+## configure hostnames to all aws machines
+echo "Setting hostnamemes on servers..."
+exer_w1 "hostnamectl set-hostname $web1"
+exer_w2 "hostnamectl set-hostname $web2"
+exer_n1 "hostnamectl set-hostname $nfsserver1"
+exer_n2 "hostnamectl set-hostname $nfsserver2"
+exer_s1 "hostnamectl set-hostname $sql1"
+exer_s2 "hostnamectl set-hostname $sql2"
+
 ## Disable root trough ssh
 
 for host in "${exe_hosts[@]}"
@@ -195,16 +214,6 @@ do
 $host "sudo -i cp -rf /root/.ssh/authorized_keys_orig /root/.ssh/authorized_keys"
 
 done
-
-
-## configure hostnames to all aws machines
-echo "Setting hostnamemes on servers..."
-exe_w1 "sudo -i hostnamectl set-hostname $web1"
-exe_w2 "sudo -i hostnamectl set-hostname $web2"
-exe_n1 "sudo -i hostnamectl set-hostname $nfsserver1"
-exe_n2 "sudo -i hostnamectl set-hostname $nfsserver2"
-exe_s1 "sudo -i hostnamectl set-hostname $sql1"
-exe_s2 "sudo -i hostnamectl set-hostname $sql2"
 
 
 ## Common commands for all hosts - Disable FW and SELinux
