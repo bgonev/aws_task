@@ -66,7 +66,13 @@ file { 'index.php':
     group => 'nginx',
     source => 'puppet:///modules/webcontent/index.php',
   }
-
+file { 'me_and_max.jpg':
+    path    => '/webshare/www.domain.com/me_and_max.jpg',
+    ensure  => 'file',
+    owner => 'nginx',
+    group => 'nginx',
+    source => 'puppet:///modules/webcontent/me_and_max.jpg',
+  }
 file { 'insert.sh':
     path    => '/tmp/insert.sh',
     ensure  => 'file',

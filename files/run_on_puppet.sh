@@ -17,7 +17,8 @@ sql2_pem=sql2.pem
 
 ## Addresses of LB
 ip=`cat ./to_aws/files/lb.ip`
-address=`cat./to_aws/files/lb.address`
+address=`cat./to_aws/files/lb.address | awk '{print $4}'`
+address=`dig +short $address`
 
 echo " *****************************************************************************************"
 echo " ***                                                                                  ****"
@@ -116,6 +117,8 @@ scp -i ../to_aws/keys/$sql2_pem $1 root@$sql2:$2
 
 cpr_hosts=("cpr_w1" "cpr_w2" "cpr_n1" "cpr_n2" "cpr_s1" "cpr_s2")
 
+## Install dig
+sudo yum -y install bind-utils
 
 ## Install ntp
 sudo yum -y install ntp
@@ -252,6 +255,11 @@ sleep 120
 exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
 echo "*****End.******"
+
+## Addresses of LB
+ip=`cat ./to_aws/files/lb.ip`
+address=`cat./to_aws/files/lb.address | awk '{print $4}'`
+address=`dig +short $address`
 
 echo "Add to your hosts file following record: $ip www.domain.com"
 echo "Then point your browser to http://www.domain.com to test the application hosted on this platform"
