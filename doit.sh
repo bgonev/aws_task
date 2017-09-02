@@ -148,6 +148,7 @@ nfs1_pvt_ip=`aws ec2 describe-instances --instance-ids $nfs1_id --query 'Reserva
 nfs2_pvt_ip=`aws ec2 describe-instances --instance-ids $nfs2_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
 sql1_pvt_ip=`aws ec2 describe-instances --instance-ids $sql1_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
 sql2_pvt_ip=`aws ec2 describe-instances --instance-ids $sql2_id --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text`
+sleep 30
 lb_ip=`dig +short $lb_address | head -1`
 echo "Following are IP addresses: "
 echo "Puppet public IP : " $puppet_pub_ip
