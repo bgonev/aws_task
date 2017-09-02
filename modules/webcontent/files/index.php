@@ -4,7 +4,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<img src="me_and_max.jpg" width="640" height="480" alt="Image is missing.. It's Me and Max" />
+<img src="me_and_max.jpg" width="800" height="450" alt="Image is missing.. It's Me and Max" />
 
 </html>
 
