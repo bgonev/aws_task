@@ -233,8 +233,8 @@ sudo /opt/puppetlabs/bin/puppet cert sign --all
 
 ## Pull configs MUST IN THIS order
 echo " *****************************************************************************************"
-echo " *** Please Stand-By - Configuration is applying on each node - cca 5 minuter per node ***"
-echo " *** GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-)                ****"
+echo " *   Please Stand-By - Configuration is applying on each node - cca 3 minuter per node   *"
+echo " *   GO dring a cofee, smoke a cigarete, or wach an epizode of GOT ;-)                   *"
 echo " *****************************************************************************************"
 echo ""
 exe_n1 "sudo /opt/puppetlabs/bin/puppet agent --test"

@@ -10,8 +10,8 @@
 
 echo "***********************************************************************"
 echo "*                                                                     *"
-echo "*                     OK - Let's Start !                              *"
-echo "*                                         created by: bgonev          *"
+echo "*            OK - Let's Start - this will take cca 30 min.!           *"
+echo "*                                                created by: bgonev   *"
 echo "***********************************************************************"
 
 mkdir -p ./to_aws/files
@@ -100,7 +100,6 @@ cmd_key_pair nfsserver1
 cmd_key_pair nfsserver2
 cmd_key_pair sql1
 cmd_key_pair sql2
-chmod 400 ./keys/*
 
 ## Create Machines
 
@@ -208,7 +207,7 @@ exe_pup "mkdir -p ./tmp/to_aws/keys"
 exe_pup "mkdir -p ./tmp/to_aws/files"
 cp_pup "./to_aws/keys/*" "~/tmp/to_aws/keys/"
 cp_pup "./to_aws/files/*" "~/tmp/to_aws/files/"
-cp_pup "/tmp/aws_objects.log "~/tmp/to_aws/files/"
+cp_pup "/tmp/aws_objects.log" "~/tmp/to_aws/files/"
 exe_pup "sudo hostnamectl set-hostname puppet.domain.com"
 exe_pup "sudo yum -y install git"
 exe_pup "git clone https://github.com/bgonev/aws_task.git ~/tmp/from_git"
