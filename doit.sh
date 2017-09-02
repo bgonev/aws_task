@@ -87,7 +87,7 @@ tag $sg
 aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 22 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 1-65535 --cidr $vpc_cidr
 aws ec2 authorize-security-group-ingress --group-id $sg --protocol udp --port 1-65535 --cidr $vpc_cidr
-aws ec2 authorize-security-group-ingress --group-id $sg --ip-permissions '[{"IpProtocol": "icmp", "FromPort": 8, "ToPort": 0, "IpRanges": [{"CidrIp": '$vpc_cidr'}]}]'
+aws ec2 authorize-security-group-ingress --group-id $sg --ip-permissions '[{"IpProtocol": "icmp", "FromPort": 8, "ToPort": 0, "IpRanges": [{"CidrIp": "0.0.0.0/0"}]}]'
 echo $sg >> /tmp/aws_objects.log
 done
 
@@ -154,6 +154,8 @@ lb_address=`aws elbv2 describe-load-balancers --names lbCandidate8 --query LoadB
 echo "Create volumes for NFS cluster..."
 vol1_id=`aws ec2 create-volume --size 10 --availability-zone $z1 --volume-type gp2 --query VolumeId --output text`
 vol2_id=`aws ec2 create-volume --size 10 --availability-zone $z2 --volume-type gp2 --query VolumeId --output text`
+echo "Waiting volumes to became ready..." 
+sleep 60
 aws ec2 attach-volume --volume-id $vol1_id --instance-id $nfs1_id --device /dev/sdf --output text
 aws ec2 attach-volume --volume-id $vol2_id --instance-id $nfs2_id --device /dev/sdf --output text
 

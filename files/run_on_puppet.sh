@@ -15,10 +15,6 @@ nfsserver2_pem=nfsserver2.pem
 sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
-## Addresses of LB
-address=`cat ../../to_aws/files/lb.address | awk '{print $4}'`
-address=`dig +short $address | head -1`
-echo $address
 
 echo " *****************************************************************************************"
 echo " ***                                                                                  ****"
@@ -86,6 +82,7 @@ scp -i ../to_aws/keys/$web1_pem $1 centos@$web1:$2
 cp_w2 () {
 scp -i ../to_aws/keys/$web2_pem $1 centos@$web2:$2
 }
+cp_n1 () {
 scp -i ../to_aws/keys/$nfsserver1_pem $1 centos@$nfsserver1:$2
 }
 cp_n2 () {
