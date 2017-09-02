@@ -128,6 +128,8 @@ lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_
 tg80_arn=`aws elbv2 create-target-group --name web80srvrsc8 --protocol HTTP --port 80 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
 tg443_arn=`aws elbv2 create-target-group --name web443srvrsc8 --protocol HTTPS --port 443 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
 aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id
+sleep 2
+aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id
 aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id Id=$web2_id
 aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn
 aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTPS --port 443  --certificates CertificateArn=arn:aws:iam::272462672480:server-certificate/aws-demo --default-actions Type=forward,TargetGroupArn=$tg443_arn
@@ -227,3 +229,4 @@ ssh -i ./to_aws/keys/puppet.pem root@$puppet_pub_ip "sudo -i cp -rf /root/.ssh/a
 
 ssh -i ./to_aws/keys/puppet.pem centos@$puppet_pub_ip "~/tmp/from_git/files/run_on_puppet.sh"
 
+ssh -i ./to_aws/keys/puppet.pem centos@$puppet_pub_ip "~/tmp/from_git/files/end.sh"
