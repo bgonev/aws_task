@@ -47,6 +47,7 @@ exe_s2 () {
 ssh -i ../to_aws/keys/$sql2_pem -o StrictHostKeyChecking=no centos@$sql2 $1
 }
 
+exe_hosts=("exe_w1" "exe_w2" "exe_n1" "exe_n2" "exe_s1" "exe_s2")
 
 ## Remote execution aliases as root
 
