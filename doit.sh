@@ -46,19 +46,19 @@ sub2_pub_id=`aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $z2_pub_cidr --
 sub1_pvt_id=`aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $z1_pvt_cidr --availability-zone $z1 --query Subnet.SubnetId --output text`
 sub2_pvt_id=`aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $z2_pvt_cidr --availability-zone $z2 --query Subnet.SubnetId --output text`
 gw_id=`aws ec2 create-internet-gateway --query InternetGateway.InternetGatewayId --output text`
-aws ec2 attach-internet-gateway --vpc-id $vpc_id --internet-gateway-id $gw_id
+aws ec2 attach-internet-gateway --vpc-id $vpc_id --internet-gateway-id $gw_id >/dev/null
 rt_id=`aws ec2 create-route-table --vpc-id $vpc_id --query RouteTable.RouteTableId --output text`
-aws ec2 create-route --route-table-id $rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id  $gw_id --output text
-aws ec2 associate-route-table  --subnet-id $sub1_pub_id --route-table-id $rt_id --output text
-aws ec2 associate-route-table  --subnet-id $sub2_pub_id --route-table-id $rt_id --output text
-aws ec2 modify-subnet-attribute --subnet-id $sub1_pub_id --map-public-ip-on-launch
-aws ec2 modify-subnet-attribute --subnet-id $sub2_pub_id --map-public-ip-on-launch
+aws ec2 create-route --route-table-id $rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id  $gw_id --output text >/dev/null
+aws ec2 associate-route-table  --subnet-id $sub1_pub_id --route-table-id $rt_id --output text >/dev/null
+aws ec2 associate-route-table  --subnet-id $sub2_pub_id --route-table-id $rt_id --output text >/dev/null
+aws ec2 modify-subnet-attribute --subnet-id $sub1_pub_id --map-public-ip-on-launch >/dev/null
+aws ec2 modify-subnet-attribute --subnet-id $sub2_pub_id --map-public-ip-on-launch >/dev/null
 eip_id=`aws ec2 allocate-address --domain vpc --query AllocationId --output text`
 natgw_id=`aws ec2 create-nat-gateway --subnet-id $sub1_pub_id --allocation-id $eip_id --query NatGateway.NatGatewayId --output text`
 ## We must sleep here as on tests Pending message was > 60 < seconds
 sleep 120
 main_rt_id=`aws ec2 describe-route-tables --filters "Name=vpc-id,Values=$vpc_id" --query 'RouteTables[?Associations[0].Main == \`true\`]' --output text | head -1 | awk '{print $1}'`
-aws ec2 create-route --route-table-id $main_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $natgw_id --output text
+aws ec2 create-route --route-table-id $main_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $natgw_id --output text >/dev/null
 objects=("$vpc_id" "$sub1_pub_id" "$sub1_pub_id" "$sub1_pub_id" "$sub1_pub_id" "$gw_id" "$rt_id" "$natgw_id" "$natgw_id")
 
 ## Tag VPC objects
@@ -85,18 +85,18 @@ echo "---------SG Objects--------" >> /tmp/aws_objects.log
 for sg in "${sg_list[@]}"
 do
 tag $sg
-aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 22 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 1-65535 --cidr $vpc_cidr
-aws ec2 authorize-security-group-ingress --group-id $sg --protocol udp --port 1-65535 --cidr $vpc_cidr
-aws ec2 authorize-security-group-ingress --group-id $sg --ip-permissions '[{"IpProtocol": "icmp", "FromPort": 8, "ToPort": 0, "IpRanges": [{"CidrIp": "0.0.0.0/0"}]}]'
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 22 --cidr 0.0.0.0/0 >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 1-65535 --cidr $vpc_cidr >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol udp --port 1-65535 --cidr $vpc_cidr >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $sg --ip-permissions '[{"IpProtocol": "icmp", "FromPort": 8, "ToPort": 0, "IpRanges": [{"CidrIp": "0.0.0.0/0"}]}]' >/dev/null
 echo $sg >> /tmp/aws_objects.log
 done
 
 ## Additional configuration of SG
-aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 80 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 443 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 80 --cidr 0.0.0.0/0
-aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 443 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 80 --cidr 0.0.0.0/0 >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $web_sg --protocol tcp --port 443 --cidr 0.0.0.0/0 >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 80 --cidr 0.0.0.0/0 >/dev/null
+aws ec2 authorize-security-group-ingress --group-id $lb_sg --protocol tcp --port 443 --cidr 0.0.0.0/0 >/dev/null
 
 ## Create PEM key files
 
@@ -116,7 +116,7 @@ cmd_key_pair sql2
 
 ## Create Machines
 
-echo "Creating t2. micro instances..."
+echo "Creating $inst_type instances..."
 
 puppet_id=`aws ec2 run-instances --image-id ami-daeb57be --count 1 --instance-type $inst_type --key-name puppet --security-group-ids $puppet_sg --subnet-id $sub1_pub_id --associate-public-ip-address --query 'Instances[0].InstanceId' --output text`
 web1_id=`aws ec2 run-instances --image-id ami-daeb57be --count 1 --instance-type $inst_type --key-name web1 --security-group-ids $web_sg --subnet-id $sub1_pub_id --associate-public-ip-address --query 'Instances[0].InstanceId' --output text`
@@ -135,19 +135,19 @@ echo $t2 >> /tmp/aws_objects.log
 done
 
 ## Sleep and wait all instances to be up and running
-echo " Waiting 3.5 minutes for all machines to be Running..." 
-sleep 210
+echo " Waiting 30 seconds for all machines to be Running..." 
+sleep 30
 
 ## Create Application load Balancer
 lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_id $sub2_pub_id --security-groups $lb_sg --query 'LoadBalancers[0].LoadBalancerArn' --output text`
 tg80_arn=`aws elbv2 create-target-group --name web80srvrsc8 --protocol HTTP --port 80 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
 tg443_arn=`aws elbv2 create-target-group --name web443srvrsc8 --protocol HTTPS --port 443 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
-aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id
+aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id >/dev/null
 sleep 2
-aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id
-aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id Id=$web2_id
-aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn
-aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTPS --port 443  --certificates CertificateArn=arn:aws:iam::272462672480:server-certificate/aws-demo --default-actions Type=forward,TargetGroupArn=$tg443_arn
+aws elbv2 register-targets --target-group-arn $tg80_arn --targets Id=$web1_id Id=$web2_id >/dev/null
+aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id Id=$web2_id >/dev/null
+aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn >/dev/null
+aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTPS --port 443  --certificates CertificateArn=arn:aws:iam::272462672480:server-certificate/aws-demo --default-actions Type=forward,TargetGroupArn=$tg443_arn >/dev/null
 lb_address=`aws elbv2 describe-load-balancers --names lbCandidate8 --query LoadBalancers[0].DNSName --output text`
 
 ## Create folumes for NFS
@@ -156,7 +156,7 @@ echo "Create volumes for NFS cluster..."
 vol1_id=`aws ec2 create-volume --size 10 --availability-zone $z1 --volume-type gp2 --query VolumeId --output text`
 vol2_id=`aws ec2 create-volume --size 10 --availability-zone $z2 --volume-type gp2 --query VolumeId --output text`
 echo "Waiting volumes to became ready..." 
-sleep 60
+sleep 30
 aws ec2 attach-volume --volume-id $vol1_id --instance-id $nfs1_id --device /dev/sdf --output text
 aws ec2 attach-volume --volume-id $vol2_id --instance-id $nfs2_id --device /dev/sdf --output text
 
