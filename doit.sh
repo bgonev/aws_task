@@ -126,7 +126,7 @@ done
 ## Create Application load Balancer
 lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_id $sub2_pub_id --security-groups $lb_sg --query 'LoadBalancers[0].LoadBalancerArn' --output text`
 tg80_arn=`aws elbv2 create-target-group --name web80srvrsc8 --protocol HTTP --port 80 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
-tg443_arn=`aws elbv2 create-target-group --name web443srvrsc8 --protocol HTTP --port 443 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
+tg443_arn=`aws elbv2 create-target-group --name web443srvrsc8 --protocol HTTPS --port 443 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
 aws elbv2 register-targets --target-group-arn $tg80_arn  --targets Id=$web1_id Id=$web2_id
 aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id Id=$web2_id
 aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn
