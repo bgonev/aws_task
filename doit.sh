@@ -63,7 +63,7 @@ puppet_sg=`aws ec2 create-security-group --group-name puppet-sec-group --descrip
 web_sg=`aws ec2 create-security-group --group-name web-sec-group --description "Web servers security group" --vpc-id $vpc_id --query 'GroupId' --output text`
 nfs_sg=`aws ec2 create-security-group --group-name nfs-sec-group --description "NFS serverst security group " --vpc-id $vpc_id --query 'GroupId' --output text`
 sql_sg=`aws ec2 create-security-group --group-name sql-sec-group --description "SQL serverst security group " --vpc-id $vpc_id --query 'GroupId' --output text`
-lb_sg=`aws ec2 create-security-group --group-name sql-sec-group --description "LB security group " --vpc-id $vpc_id --query 'GroupId' --output text`
+lb_sg=`aws ec2 create-security-group --group-name lb-sec-group --description "LB security group " --vpc-id $vpc_id --query 'GroupId' --output text`
 
 ## Tag SG and enable unrestricted local communication on 
 
