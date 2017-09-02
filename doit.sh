@@ -133,6 +133,9 @@ tag $t2
 echo $t2 >> /tmp/aws_objects.log
 done
 
+## Sleep and wait all instances to be up and running
+echo " Waiting 3.5 minutes for all machines to be Running..." 
+sleep 210
 
 ## Create Application load Balancer
 lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_id $sub2_pub_id --security-groups $lb_sg --query 'LoadBalancers[0].LoadBalancerArn' --output text`
@@ -148,7 +151,6 @@ lb_address=`aws elbv2 describe-load-balancers --names lbCandidate8 --query LoadB
 
 ## Create folumes for NFS
 ## Here we are waiting for 1 min t2.micro to be in running state
-sleep 60
 echo "Create volumes for NFS cluster..."
 vol1_id=`aws ec2 create-volume --size 10 --availability-zone $z1 --volume-type gp2 --query VolumeId --output text`
 vol2_id=`aws ec2 create-volume --size 10 --availability-zone $z2 --volume-type gp2 --query VolumeId --output text`
