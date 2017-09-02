@@ -134,14 +134,6 @@ echo $t2 >> /tmp/aws_objects.log
 done
 
 
-## Create folumes for NFS
-echo "Create volumes for NFS cluster..."
-vol1_id=`aws ec2 create-volume --size 10 --availability-zone $z1 --volume-type gp2 --query VolumeId --output text`
-vol2_id=`aws ec2 create-volume --size 10 --availability-zone $z2 --volume-type gp2 --query VolumeId --output text`
-aws ec2 attach-volume --volume-id $vol1_id --instance-id $nfs1_id --device /dev/sdf --output text
-aws ec2 attach-volume --volume-id $vol2_id --instance-id $nfs2_id --device /dev/sdf --output text
-
-
 ## Create Application load Balancer
 lb_arn=`aws elbv2 create-load-balancer --name lbCandidate8  --subnets $sub1_pub_id $sub2_pub_id --security-groups $lb_sg --query 'LoadBalancers[0].LoadBalancerArn' --output text`
 tg80_arn=`aws elbv2 create-target-group --name web80srvrsc8 --protocol HTTP --port 80 --vpc-id $vpc_id --query 'TargetGroups[0].TargetGroupArn' --output text`
@@ -153,6 +145,16 @@ aws elbv2 register-targets --target-group-arn $tg443_arn --targets Id=$web1_id I
 aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg80_arn
 aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTPS --port 443  --certificates CertificateArn=arn:aws:iam::272462672480:server-certificate/aws-demo --default-actions Type=forward,TargetGroupArn=$tg443_arn
 lb_address=`aws elbv2 describe-load-balancers --names lbCandidate8 --query LoadBalancers[0].DNSName --output text`
+
+## Create folumes for NFS
+## Here we are waiting for 1 min t2.micro to be in running state
+sleep 60
+echo "Create volumes for NFS cluster..."
+vol1_id=`aws ec2 create-volume --size 10 --availability-zone $z1 --volume-type gp2 --query VolumeId --output text`
+vol2_id=`aws ec2 create-volume --size 10 --availability-zone $z2 --volume-type gp2 --query VolumeId --output text`
+aws ec2 attach-volume --volume-id $vol1_id --instance-id $nfs1_id --device /dev/sdf --output text
+aws ec2 attach-volume --volume-id $vol2_id --instance-id $nfs2_id --device /dev/sdf --output text
+
 
 ## Find Public and Private addresses for each instance 
 
