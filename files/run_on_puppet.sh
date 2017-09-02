@@ -196,7 +196,7 @@ done
 
 
 ## configure hostnames to all aws machines
-echo "Setting hostnamemes on servers..."
+echo "Setting hostnames on servers..."
 exer_w1 "hostnamectl set-hostname $web1"
 exer_w2 "hostnamectl set-hostname $web2"
 exer_n1 "hostnamectl set-hostname $nfsserver1"
