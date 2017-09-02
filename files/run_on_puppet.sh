@@ -16,9 +16,9 @@ sql1_pem=sql1.pem
 sql2_pem=sql2.pem
 
 ## Addresses of LB
-ip=`cat ./to_aws/files/lb.ip`
-address=`cat./to_aws/files/lb.address | awk '{print $4}'`
-address=`dig +short $address`
+address=`cat ../../to_aws/files/lb.address | awk '{print $4}'`
+address=`dig +short $address | head -1`
+echo $address
 
 echo " *****************************************************************************************"
 echo " ***                                                                                  ****"
@@ -256,10 +256,5 @@ exe_w2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 exe_w1 "/tmp/insert.sh"
 echo "*****End.******"
 
-## Addresses of LB
-ip=`cat ./to_aws/files/lb.ip`
-address=`cat./to_aws/files/lb.address | awk '{print $4}'`
-address=`dig +short $address`
-
-echo "Add to your hosts file following record: $ip www.domain.com"
+echo "Add to your hosts file following record: $address www.domain.com"
 echo "Then point your browser to http://www.domain.com to test the application hosted on this platform"
