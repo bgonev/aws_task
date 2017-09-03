@@ -1,12 +1,16 @@
 #!/bin/bash
-### install aws cli
-#echo "Indstalling AWS CLI..."
-#curl -O https://bootstrap.pypa.io/get-pip.py
-#python get-pip.py --user
-#~/.local/bin/pip install awscli --upgrade --user
-#sudo /bin/cp -rf ~/.local/bin/* /usr/bin
-#
-#aws configure
+## install aws cli
+echo "Indstalling AWS CLI, please stand-by..."
+curl -O https://bootstrap.pypa.io/get-pip.py >/dev/null
+sudo python get-pip.py --user >/dev/null
+~/.local/bin/pip install awscli --upgrade --user >/dev/null
+sudo /bin/cp -rf ~/.local/bin/* /usr/bin >/dev/null
+echo ""
+echo ""
+echo ""
+echo " Please Enter youw AWS Access Key ID, Secret Key and Region "
+echo ""
+aws configure
 
 echo "***********************************************************************"
 echo "*                                                                     *"
