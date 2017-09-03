@@ -47,7 +47,7 @@ exe_s2 () {
 ssh -i ../to_aws/keys/$sql2_pem -o StrictHostKeyChecking=no centos@$sql2 $1
 }
 
-exe_hosts=("exe_w1" "exe_w2" "exe_n1" "exe_n2" "exe_s1" "exe_s2")
+exe_hosts=("exe_w1" "exe_w2" "exe_s1" "exe_s2" "exe_n1" "exe_n2")
 
 ## Remote execution aliases as root
 
@@ -220,9 +220,6 @@ $host "sudo  systemctl disable firewalld"
 $host "sudo  systemctl stop firewalld"
 $host "sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm"
 $host "sudo  yum -y install puppet-agent"
-#$host "sudo rm -rf /etc/puppetlabs/puppet/ssl"
-#$host "sudo mkdir /etc/puppetlabs/puppet/ssl"
-#$host "sudo chmod 0771 /etc/puppetlabs/puppet/ssl"
 $host "sudo  systemctl restart puppet"
 $host "sudo /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true"
 
