@@ -40,21 +40,21 @@ user { 'nginx':
 #       ensure => absent,
 #    }
 
-package { "centos-release-gluster":
-        require => Exec['yum-update'],
-        ensure => present,
-    }
+#package { "centos-release-gluster":
+#        require => Exec['yum-update'],
+#        ensure => present,
+#    }
 
-package { "glusterfs-server":
-        require => Exec['yum-update'],
-        ensure => present,
-    }
+#package { "glusterfs-server":
+#        require => Exec['yum-update'],
+#        ensure => present,
+#    }
 
 
-service { "glusterd":
-        ensure => running,
-        enable => true,
-    }
+#service { "glusterd":
+#        ensure => running,
+#        enable => true,
+#    }
 
 
 #service { "rpcbind":
@@ -87,12 +87,12 @@ service { "glusterd":
 #        enable => true,
 #        require => Service["nfs-lock"],
 #    }
-file { '/share/webshare':
-    ensure => 'directory',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0777',
-  }
+#file { '/share/webshare':
+#    ensure => 'directory',
+#    owner  => 'root',
+#    group  => 'root',
+#    mode   => '0777',
+#  }
 
 file { '/share/webshare/tmp':
     ensure => 'directory',

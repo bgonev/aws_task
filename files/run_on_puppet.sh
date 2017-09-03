@@ -241,14 +241,18 @@ echo " *   GO dring a cofee, smoke a cigarete, or wach an episode of GoT ;-)    
 echo " *****************************************************************************************"
 echo ""
 echo "Configuring Node1 for NFS server part..."
+cp_n1 "./files/mount_disk.sh" "~/"
+cp n1 "./files/post_gluster.sh" "~/"
+cp_n2 "./files/mount_disk.sh" "~/"
+exe_n1 "sudo ~/mount_disk.sh"
+exe_n2 "sudo ~/mount_disk.sh"
+exe_n1 "sudo ~/post_gluster.sh"
 exe_n1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
 echo "Configuring Node2 for NFS server part..."
 exe_n2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
-exe_n1 "sudo /tmp/mount_disk.sh"
-exe_n2 "sudo /tmp/mount_disk.sh"
-exe_n1 "sudo /tmp/post_gluster.sh" 
+sleep 10
 echo "Configuring Master for SQL server part..."
 exe_s1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
