@@ -1,0 +1,33 @@
+This script is made as possible solution for task requested from Trinimbus hiring process.
+
+The goal of author was to create "one-click" script which will create complete environment which will provide web application using common file storage and redundand DB.
+Script is optimized for Canada Central AWS region, and when configuring AWS CLI interface, this region should be used.
+At the time of developing this script, CIDR block 192.168.0.0/16 was free in the sandbox, so script is preconfigured to use this block.
+Script is configurable, so in begining you can define VPC CIDR block, subnet definiton (for private and public subnets), as well as type of EC2 instances and linux image that will be apllied on. Script is already preconfigured with following settings:
+
+vpc_cidr='192.168.0.0/16'
+z1='ca-central-1a'
+z2='ca-central-1b'
+z1_pub_cidr='192.168.101.0/24'
+z1_pvt_cidr='192.168.1.0/24'
+z2_pub_cidr='192.168.201.0/24'
+z2_pvt_cidr='192.168.2.0/24'
+inst_type='t2.medium'
+image='ami-daeb57be'
+
+Solution is based upon 2 sets of vertical stacks located on different availability zones. Configuration provisioning of the servers is done using Puppet server. Web srvers are exposed in public subnet, File and DB servers are in private subnet. Each stack have 1 web server, 1 NFS server and 1 SQL server. At front, AWS ELB application based (HTTP/HTTPS) load balancer is deployed. NFS servers are configured with Gluster which provides replication among two nodes, using block volume on each NFS node. MariaDB servers are used for database part, and they are configured in Master-Slave replication. For the sake of simplicity and time for completition of the task, Two web servers are connected to Master, and Slave is used as standby, so no cluster mechanism is used for high availability on DB level, only data redundancy is ensured.
+As mentioned previously, for NFS data redundancy Gluster is used for data replication among two NFS server nodes. Configuration is set in a way that web1 server have mount point of nfsserver1, and web2 server uses nfsserver2. This is no full high availability concept, as there is no cross-zone connectivity.
+
+
+Information about relevant AWS objects created during the process, as well as all IP addresses of the serverscan be found at local machine in folder: ./to_aws
+
+How to create the environment:
+
+Run the script doit.sh 
+
+Manual part after execution of "doit.sh" script is input of AWS credentials, and editing of your local hosts file according information that script will inform you at the end of the execution. 
+
+For testing the end result - accessing the web page -  open your web browser and input the address that script will point to.
+ 
+Boris Gonev
+bgonev@gmail.com
