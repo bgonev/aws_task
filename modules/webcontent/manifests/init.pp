@@ -51,13 +51,25 @@ file { 'webshare':
     group => 'root',
   }
 
+
+if $hostname == 'web1.domain.com'  {
 mount { "/webshare":
         device  => "nfsserver1:/webshare",
         fstype  => "nfs",
-	ensure  => "mounted",
-	options => "rw,nolock",
+        ensure  => "mounted",
+        options => "rw,nolock",
         atboot  => "true",
     }
+} else {
+mount { "/webshare":
+        device  => "nfsserver2:/webshare",
+        fstype  => "nfs",
+        ensure  => "mounted",
+        options => "rw,nolock",
+        atboot  => "true",
+    }
+}
+
 
 file { 'index.php':
     path    => '/webshare/www.domain.com/index.php',
