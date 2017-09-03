@@ -242,7 +242,7 @@ echo " *************************************************************************
 echo ""
 echo "Configuring Node1 for NFS server part..."
 cp_n1 "./files/mount_disk.sh" "~/"
-cp n1 "./files/post_gluster.sh" "~/"
+cp_n1 "./files/post_gluster.sh" "~/"
 cp_n2 "./files/mount_disk.sh" "~/"
 exe_n1 "sudo ~/mount_disk.sh"
 exe_n2 "sudo ~/mount_disk.sh"
