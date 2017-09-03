@@ -1,9 +1,25 @@
-class nfsserver {
-
-exec { 'yum-update':
+{ 'yum-update':
   command => '/usr/bin/yum -y update',
   timeout => 1800,
 }
+
+file { "/tmp/mount_disk.sh":
+        ensure => present,
+        owner => root,
+        group => root,
+        mode => '0755',
+        source => 'puppet:///modules/nfsserver/mount_disk.sh'
+}
+
+
+file { "/tmp/post_gluster.sh":
+        ensure => present,
+        owner => root,
+        group => root,
+        mode => '0755',
+        source => 'puppet:///modules/nfsserver/post_gluster.sh'
+}
+
 
 group { 'nginx':
     ensure => 'present',
@@ -17,51 +33,79 @@ user { 'nginx':
     home => '/home/nginx',
     managehome => true
   }
+#package { "nfs-utils":
+#        require => Exec['yum-update'],
+#       ensure => absent,
+#    }
 
-package { "nfs-utils":
+package { "centos-release-gluster":
         require => Exec['yum-update'],
-	ensure => installed,
+        ensure => present,
     }
 
-service { "rpcbind":
+package { "glusterfs-server":
+        require => Exec['yum-update'],
+        ensure => present,
+    }
+
+
+service { "glusterd":
         ensure => running,
         enable => true,
-        require => [
-            Package["nfs-utils"],
-        ],
-    }
-
-service { "nfs-idmap":
-        ensure => running,
-        enable => true,
-        require => [
-            Package["nfs-utils"],
-        ],
     }
 
 
-    service { "nfs-lock":
-        ensure => running,
-        enable => true,
-        require => [
-            Package["nfs-utils"],
-        ],
-    }
+exec {"Create disk":
+        command => '/tmp/mount_disk.sh',
+        cwd      => '/tmp',
+        user     => 'root',
+        logoutput => on_failure,
+}
 
-    service { "nfs-server":
-        ensure => running,
-        enable => true,
-        require => Service["nfs-lock"],
-    }
+exec {"Configure gluster":
+command => '/tmp/post_gluster.sh',
+        cwd      => '/tmp',
+        user     => 'root',
+        logoutput => on_failure,
+}
+#service { "rpcbind":
+#        ensure => running,
+#        enable => true,
+#        require => [
+#            Package["nfs-utils"],
+#        ],
+#    }
 
-file { '/webshare':
+#service { "nfs-idmap":
+#        ensure => running,
+#        enable => true,
+#        require => [
+#            Package["nfs-utils"],
+#        ],
+#    }
+
+
+#    service { "nfs-lock":
+#        ensure => running,
+#        enable => true,
+#        require => [
+#            Package["nfs-utils"],
+#        ],
+#    }
+
+#    service { "nfs-server":
+#        ensure => running,
+#        enable => true,
+#        require => Service["nfs-lock"],
+#    }
+file { '/share/webshare':
     ensure => 'directory',
     owner  => 'root',
     group  => 'root',
     mode   => '0777',
   }
 
-file { '/webshare/tmp':
+file { '/share/webshare/tmp':
     ensure => 'directory',
     owner  => 'root',
     group  => 'root',
@@ -70,30 +114,29 @@ file { '/webshare/tmp':
 
 
 file { 'certs':
-    path    => '/webshare/certs',
+    path    => '/share/webshare/certs',
     ensure  => 'directory',
     owner => 'nginx',
     group => 'nginx',
   }
 
 file { 'logs':
-    path    => '/webshare/logs',
+    path    => '/share/webshare/logs',
     ensure  => 'directory',
     owner => 'nginx',
     group => 'nginx',
   }
 
 file { 'www.domain.com':
-    path    => '/webshare/www.domain.com',
+    path    => '/share/webshare/www.domain.com',
     ensure  => 'directory',
     owner => 'nginx',
     group => 'nginx',
   }
 
-
 file { "/etc/exports":
-        notify => Service['nfs-server'],
-	path => '/etc/exports',
+        #notify => Service['nfs-server'],
+        path => '/etc/exports',
         ensure => present,
         owner => root,
         group => root,
@@ -101,3 +144,4 @@ file { "/etc/exports":
 }
 
 }
+
