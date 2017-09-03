@@ -1,4 +1,6 @@
-{ 'yum-update':
+class nfsserver {
+
+exec { 'yum-update':
   command => '/usr/bin/yum -y update',
   timeout => 1800,
 }
@@ -55,19 +57,6 @@ service { "glusterd":
     }
 
 
-exec {"Create disk":
-        command => '/tmp/mount_disk.sh',
-        cwd      => '/tmp',
-        user     => 'root',
-        logoutput => on_failure,
-}
-
-exec {"Configure gluster":
-command => '/tmp/post_gluster.sh',
-        cwd      => '/tmp',
-        user     => 'root',
-        logoutput => on_failure,
-}
 #service { "rpcbind":
 #        ensure => running,
 #        enable => true,

@@ -246,6 +246,9 @@ sleep 120
 echo "Configuring Node2 for NFS server part..."
 exe_n2 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
+exe_n1 "sudo /tmp/mount_disk.sh"
+exe_n2 "sudo /tmp/mount_disk.sh"
+exe_n1 "sudo /tmp/post_gluster.sh" 
 echo "Configuring Master for SQL server part..."
 exe_s1 "sudo /opt/puppetlabs/bin/puppet agent --test"
 sleep 120
