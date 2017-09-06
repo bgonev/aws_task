@@ -6,8 +6,8 @@ include ntp
 include nfsclient
 include nginx
 include phpfpm
-include webcontent
 include webcontent::ssl
+include webcontent
 include mysqlclient
 }
 
